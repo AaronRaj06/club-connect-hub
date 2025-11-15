@@ -27,13 +27,13 @@ const EventCard = ({
   status = "upcoming",
 }: EventCardProps) => {
   const statusColors = {
-    upcoming: "bg-primary/10 text-primary",
-    ongoing: "bg-accent/10 text-accent",
-    completed: "bg-muted text-muted-foreground",
+    upcoming: "bg-success/20 text-success border-success/30",
+    ongoing: "bg-accent/20 text-accent border-accent/30",
+    completed: "bg-muted/20 text-muted-foreground border-border",
   };
 
   return (
-    <Card className="group transition-all hover:shadow-lg">
+    <Card className="group h-full border-l-4 border-l-primary transition-all hover:shadow-md">
       <CardHeader>
         <div className="flex items-start justify-between">
           <Badge variant="secondary" className="mb-2">
@@ -41,7 +41,7 @@ const EventCard = ({
           </Badge>
           <Badge className={statusColors[status]}>{status}</Badge>
         </div>
-        <CardTitle className="line-clamp-2 group-hover:text-primary">{title}</CardTitle>
+        <CardTitle className="line-clamp-2 font-mono text-lg uppercase group-hover:text-primary">{title}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         <p className="line-clamp-2 text-sm text-muted-foreground">{description}</p>

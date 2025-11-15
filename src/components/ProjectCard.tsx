@@ -19,11 +19,11 @@ const ProjectCard = ({
   contributors,
 }: ProjectCardProps) => {
   return (
-    <Card className="group h-full transition-all hover:shadow-lg">
+    <Card className="group h-full border-l-4 border-l-primary transition-all hover:shadow-md">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          <span className="line-clamp-1 group-hover:text-primary">{name}</span>
-          <Github className="h-5 w-5 text-muted-foreground" />
+          <span className="line-clamp-1 font-mono text-lg uppercase group-hover:text-primary">{name}</span>
+          <Github className="h-5 w-5 text-success" />
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
