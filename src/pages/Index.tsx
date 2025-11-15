@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import EventCard from "@/components/EventCard";
 import ProjectCard from "@/components/ProjectCard";
+import osClubLogo from "@/assets/os-club-logo.png";
 
 const Index = () => {
   // Mock data - in production, fetch from API
@@ -77,19 +78,28 @@ const Index = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden border-b border-border bg-gradient-to-br from-primary/5 via-background to-accent/5">
+      <section className="relative overflow-hidden border-b border-border">
         <div className="container mx-auto px-4 py-24 md:py-32">
           <div className="mx-auto max-w-4xl text-center">
-            <h1 className="mb-6 text-4xl font-bold tracking-tight text-foreground md:text-6xl lg:text-7xl">
+            {/* Logo */}
+            <div className="mb-8 flex justify-center">
+              <img 
+                src={osClubLogo} 
+                alt="Open Source Community Logo" 
+                className="h-32 w-32 md:h-48 md:w-48 animate-pulse"
+              />
+            </div>
+            
+            <h1 className="mb-6 font-mono text-4xl font-bold uppercase tracking-tight text-primary md:text-6xl lg:text-7xl">
               Open Source Community
-              <span className="block bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              <span className="block text-foreground">
                 @ VCE
               </span>
             </h1>
-            <p className="mb-4 text-xl font-semibold text-primary md:text-2xl">
+            <p className="mb-4 font-mono text-xl font-semibold uppercase text-success md:text-2xl">
               Collaborate. Contribute. Grow.
             </p>
-            <p className="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground">
+            <p className="mx-auto mb-8 max-w-2xl text-base text-muted-foreground md:text-lg" style={{ lineHeight: 1.6 }}>
               Join Vasavi College of Engineering's premier open source community. Learn, build, and contribute to real-world projects while connecting with fellow developers.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
@@ -119,15 +129,15 @@ const Index = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="border-b border-border bg-muted/30 py-12">
+      <section className="border-b border-border py-12">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
             {stats.map(({ icon: Icon, label, value }) => (
               <div key={label} className="text-center">
                 <div className="mb-2 flex justify-center">
-                  <Icon className="h-8 w-8 text-primary" />
+                  <Icon className="h-8 w-8 text-accent" />
                 </div>
-                <div className="text-3xl font-bold text-foreground">{value}</div>
+                <div className="font-mono text-3xl font-bold text-primary">{value}</div>
                 <div className="text-sm text-muted-foreground">{label}</div>
               </div>
             ))}
@@ -139,10 +149,10 @@ const Index = () => {
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="mb-4 text-3xl font-bold text-foreground md:text-4xl">
+            <h2 className="mb-4 font-mono text-3xl font-bold uppercase text-primary md:text-4xl">
               About Our Community
             </h2>
-            <p className="mb-8 text-lg text-muted-foreground">
+            <p className="mb-8 text-base text-muted-foreground md:text-lg" style={{ lineHeight: 1.6 }}>
               VOSC is a student-driven community passionate about open source software development. We organize workshops, hackathons, and mentorship programs to help students contribute to real-world projects, learn industry-standard tools, and build their portfolios. Whether you're a beginner or an experienced developer, there's a place for you here.
             </p>
             <Button variant="outline" asChild>
@@ -156,13 +166,13 @@ const Index = () => {
       </section>
 
       {/* Events Preview */}
-      <section className="border-y border-border bg-muted/20 py-16 md:py-24">
+      <section className="border-y border-border py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-foreground md:text-4xl">
+            <h2 className="mb-4 font-mono text-3xl font-bold uppercase text-primary md:text-4xl">
               Upcoming Events
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-base text-muted-foreground md:text-lg">
               Join our workshops, talks, and sprints to level up your skills
             </p>
           </div>
@@ -186,10 +196,10 @@ const Index = () => {
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-foreground md:text-4xl">
+            <h2 className="mb-4 font-mono text-3xl font-bold uppercase text-primary md:text-4xl">
               Featured Projects
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-base text-muted-foreground md:text-lg">
               Explore projects built by our community members
             </p>
           </div>
@@ -202,35 +212,18 @@ const Index = () => {
       </section>
 
       {/* Join CTA */}
-      <section className="border-t border-border bg-gradient-to-br from-primary/10 via-background to-accent/10 py-16 md:py-24">
+      <section className="border-t border-border py-16 md:py-24">
         <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-3xl text-center">
-            <h2 className="mb-4 text-3xl font-bold text-foreground md:text-4xl">
-              Ready to Start Contributing?
+          <div className="mx-auto max-w-3xl rounded-lg border border-border bg-card p-8 text-center md:p-12">
+            <TrendingUp className="mx-auto mb-6 h-12 w-12 text-success" />
+            <h2 className="mb-4 font-mono text-3xl font-bold uppercase text-primary md:text-4xl">
+              Ready to Contribute?
             </h2>
-            <p className="mb-8 text-lg text-muted-foreground">
-              Join a community of passionate developers, work on exciting projects, and make your mark in the open source world.
+            <p className="mb-8 text-base text-muted-foreground md:text-lg" style={{ lineHeight: 1.6 }}>
+              Join VOSC today and start your open source journey. Connect with mentors, work on real projects, and make an impact in the tech community.
             </p>
-            <div className="mb-8 grid gap-4 text-left sm:grid-cols-2 md:grid-cols-3">
-              {[
-                { icon: TrendingUp, text: "Learn from experienced mentors" },
-                { icon: Users, text: "Collaborate with peers" },
-                { icon: Code, text: "Build real-world projects" },
-                { icon: Award, text: "Earn certificates & badges" },
-                { icon: Github, text: "Grow your GitHub profile" },
-                { icon: Rocket, text: "Launch your tech career" },
-              ].map(({ icon: Icon, text }) => (
-                <div key={text} className="flex items-center gap-3">
-                  <Icon className="h-5 w-5 text-primary" />
-                  <span className="text-sm text-foreground">{text}</span>
-                </div>
-              ))}
-            </div>
             <Button size="lg" asChild>
-              <Link to="/join" className="flex items-center gap-2">
-                Apply Now
-                <ArrowRight className="h-5 w-5" />
-              </Link>
+              <Link to="/join">Join Now</Link>
             </Button>
           </div>
         </div>

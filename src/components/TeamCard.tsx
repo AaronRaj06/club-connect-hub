@@ -20,23 +20,23 @@ const TeamCard = ({ name, role, github, photo, bio, expertise }: TeamCardProps) 
     .toUpperCase();
 
   return (
-    <Card className="group h-full transition-all hover:shadow-lg">
+    <Card className="group h-full transition-all hover:shadow-md">
       <CardContent className="pt-6">
         <div className="flex flex-col items-center text-center">
           <Avatar className="mb-4 h-24 w-24">
             <AvatarImage src={photo} alt={name} />
-            <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-lg font-semibold text-primary-foreground">
+            <AvatarFallback className="bg-gradient-to-br from-primary to-success text-lg font-semibold text-background">
               {initials}
             </AvatarFallback>
           </Avatar>
-          <h3 className="font-semibold text-foreground">{name}</h3>
+          <h3 className="font-mono font-semibold uppercase text-primary">{name}</h3>
           <p className="mt-1 text-sm text-muted-foreground">{role}</p>
           {github && (
             <a
               href={`https://github.com/${github}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-2 flex items-center gap-1 text-sm text-primary hover:underline"
+              className="mt-2 flex items-center gap-1 text-sm text-success hover:underline"
             >
               <Github className="h-4 w-4" />
               @{github}
