@@ -4,13 +4,23 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { GitPullRequest, GitMerge, GitBranch, AlertCircle, TrendingUp, Award, Lock } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { GitPullRequest, GitMerge, GitBranch, AlertCircle, TrendingUp, Award, Lock, X } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
 
 const Dashboard = () => {
-  const [isAuthenticated] = useState(false); // In production, check actual auth state
+  // Check localStorage for authentication state on mount
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem("isAuthenticated") === "true";
+  });
+  const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
 
   // Mock user data
   const user = {
@@ -22,19 +32,40 @@ const Dashboard = () => {
     interests: ["React", "Python", "DevOps"],
   };
 
-  // Mock stats data
-  const stats = {
-    totalPRs: 47,
-    mergedPRs: 32,
-    openPRs: 8,
-    issuesOpened: 15,
-    thisMonth: 12,
-    lastMonth: 8,
-    trend: "+50%",
+  // Handle login
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginError("");
+
+    // Basic validation
+    if (!email || !password) {
+      setLoginError("Please enter both email and password");
+      return;
+    }
+
+    // Basic email validation
+    if (!email.includes("@")) {
+      setLoginError("Please enter a valid email address");
+      return;
+    }
+
+    // For demo purposes, accept any email/password combination
+    // In production, this would make an API call
+    setIsAuthenticated(true);
+    localStorage.setItem("isAuthenticated", "true");
+    setIsLoginDialogOpen(false);
+    setEmail("");
+    setPassword("");
   };
 
-  // Mock contributions data
-  const recentContributions = [
+  // Handle logout
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem("isAuthenticated");
+  };
+
+  // Mock stats data - calculated from PRs
+  const allPRs = [
     {
       id: 1,
       title: "Add dark mode support",
@@ -59,7 +90,81 @@ const Dashboard = () => {
       createdAt: "2025-11-08",
       reviews: 3,
     },
+    {
+      id: 4,
+      title: "Implement user authentication",
+      repo: "vosc-vce/website",
+      status: "merged",
+      createdAt: "2025-11-05",
+      reviews: 4,
+    },
+    {
+      id: 5,
+      title: "Add unit tests for API endpoints",
+      repo: "vosc-vce/backend",
+      status: "open",
+      createdAt: "2025-11-15",
+      reviews: 0,
+    },
+    {
+      id: 6,
+      title: "Refactor component structure",
+      repo: "vosc-vce/website",
+      status: "closed",
+      createdAt: "2025-10-28",
+      reviews: 2,
+    },
+    {
+      id: 7,
+      title: "Fix bug in event registration",
+      repo: "vosc-vce/event-tracker",
+      status: "merged",
+      createdAt: "2025-11-01",
+      reviews: 1,
+    },
+    {
+      id: 8,
+      title: "Update dependencies",
+      repo: "vosc-vce/pr-assistant",
+      status: "closed",
+      createdAt: "2025-10-20",
+      reviews: 1,
+    },
+    {
+      id: 9,
+      title: "Add error handling",
+      repo: "vosc-vce/backend",
+      status: "open",
+      createdAt: "2025-11-14",
+      reviews: 1,
+    },
+    {
+      id: 10,
+      title: "Improve accessibility",
+      repo: "vosc-vce/website",
+      status: "merged",
+      createdAt: "2025-11-03",
+      reviews: 3,
+    },
   ];
+
+  const mergedPRs = allPRs.filter(pr => pr.status === "merged");
+  const openPRs = allPRs.filter(pr => pr.status === "open");
+  const closedPRs = allPRs.filter(pr => pr.status === "closed");
+
+  const stats = {
+    totalPRs: allPRs.length,
+    mergedPRs: mergedPRs.length,
+    openPRs: openPRs.length,
+    closedPRs: closedPRs.length,
+    issuesOpened: 15,
+    thisMonth: 12,
+    lastMonth: 8,
+    trend: "+50%",
+  };
+
+  // Mock contributions data - use allPRs for the dashboard
+  const recentContributions = allPRs;
 
   // Mock events data
   const activeEvents = [
@@ -109,7 +214,7 @@ const Dashboard = () => {
                 Please log in with your member credentials to access your dashboard.
               </p>
               <div className="pt-4">
-                <Button className="w-full">Login</Button>
+                <Button className="w-full" onClick={() => setIsLoginDialogOpen(true)}>Login</Button>
                 <p className="mt-3 text-sm text-muted-foreground">
                   Not a member yet?{" "}
                   <Link to="/join" className="text-primary hover:underline">
@@ -121,6 +226,60 @@ const Dashboard = () => {
           </Card>
         </div>
         <Footer />
+
+        {/* Login Dialog */}
+        <Dialog open={isLoginDialogOpen} onOpenChange={setIsLoginDialogOpen}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Login to Dashboard</DialogTitle>
+              <DialogDescription>
+                Enter your email and password to access your member dashboard.
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="your.email@vce.ac.in"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              {loginError && (
+                <p className="text-sm text-destructive">{loginError}</p>
+              )}
+              <div className="flex justify-end gap-2 pt-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setIsLoginDialogOpen(false);
+                    setEmail("");
+                    setPassword("");
+                    setLoginError("");
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit">Login</Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
     );
   }
@@ -141,12 +300,17 @@ const Dashboard = () => {
                 Here's what's happening with your contributions
               </p>
             </div>
-            <Avatar className="h-16 w-16">
-              <AvatarImage src={`https://github.com/${user.github}.png`} alt={user.name} />
-              <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-lg font-semibold text-primary-foreground">
-                {user.name[0]}
-              </AvatarFallback>
-            </Avatar>
+            <div className="flex items-center gap-4">
+              <Avatar className="h-16 w-16">
+                <AvatarImage src={`https://github.com/${user.github}.png`} alt={user.name} />
+                <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-lg font-semibold text-primary-foreground">
+                  {user.name[0]}
+                </AvatarFallback>
+              </Avatar>
+              <Button variant="outline" size="sm" onClick={handleLogout}>
+                Logout
+              </Button>
+            </div>
           </div>
         </div>
       </section>
@@ -194,12 +358,12 @@ const Dashboard = () => {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Issues Opened</CardTitle>
-                <AlertCircle className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium">Closed PRs</CardTitle>
+                <X className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{stats.issuesOpened}</div>
-                <p className="text-xs text-muted-foreground">Total contributions</p>
+                <div className="text-2xl font-bold">{stats.closedPRs}</div>
+                <p className="text-xs text-muted-foreground">Not merged</p>
               </CardContent>
             </Card>
           </div>
@@ -212,25 +376,37 @@ const Dashboard = () => {
           <div className="grid gap-8 lg:grid-cols-3">
             {/* Main Column */}
             <div className="lg:col-span-2 space-y-8">
-              {/* Recent Contributions */}
+              {/* Pull Requests */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Recent Contributions</CardTitle>
+                  <CardTitle>Your Pull Requests</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     {recentContributions.map((pr) => (
                       <div
                         key={pr.id}
-                        className="flex items-center justify-between rounded-lg border border-border p-4"
+                        className="flex flex-col gap-2 rounded-lg border border-border p-4 sm:flex-row sm:items-center sm:justify-between"
                       >
                         <div className="flex-1">
                           <h4 className="font-medium text-foreground">{pr.title}</h4>
-                          <p className="text-sm text-muted-foreground">{pr.repo}</p>
+                          <div className="mt-1 flex items-center gap-2">
+                            <p className="text-sm text-muted-foreground">Repository:</p>
+                            <Badge variant="outline" className="text-xs">
+                              {pr.repo}
+                            </Badge>
+                          </div>
                         </div>
                         <div className="flex items-center gap-3">
                           <Badge
-                            variant={pr.status === "merged" ? "default" : "secondary"}
+                            variant={
+                              pr.status === "merged"
+                                ? "default"
+                                : pr.status === "open"
+                                ? "secondary"
+                                : "destructive"
+                            }
+                            className="capitalize"
                           >
                             {pr.status}
                           </Badge>
